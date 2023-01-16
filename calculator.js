@@ -34,20 +34,19 @@ function calculate(firstOperand, secondOperand, operator){
             fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
             calculator.display = fraction.textContent 
         } else{
-            calculator.display = firstOperand + secondOperand
+            calculator.display = `${firstOperand + secondOperand}`
         }
         return firstOperand + secondOperand
     } else if (operator === "-"){
         const difference = parseFloat((firstOperand - secondOperand).toFixed(4))
         if (!Number.isInteger(difference)){
             common_factor = Math.abs(greatest_common_factor(difference*multiplier, 1*multiplier))
-            console.log(common_factor)
             numerator = (difference*multiplier)/common_factor
             denominator = (1*multiplier)/common_factor
             fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
             calculator.display = fraction.textContent 
         } else{
-            calculator.display = firstOperand - secondOperand
+            calculator.display = `${firstOperand - secondOperand}`
         }
         
         return firstOperand - secondOperand
@@ -60,7 +59,7 @@ function calculate(firstOperand, secondOperand, operator){
             fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
             calculator.display = fraction.textContent 
         } else{
-            calculator.display = firstOperand * secondOperand
+            calculator.display = `${firstOperand * secondOperand}`
         }
         return firstOperand * secondOperand
     } else if (operator === "/"){
@@ -75,7 +74,7 @@ function calculate(firstOperand, secondOperand, operator){
             fraction.innerHTML = `<sup>${numerator/common_factor}</sup>&frasl;<sub>${denominator/common_factor}</sub>`
             calculator.display = fraction.textContent 
         } else{
-            calculator.display = firstOperand / secondOperand
+            calculator.display = `${firstOperand / secondOperand}`
         }
         return firstOperand / secondOperand
     } else if (operator === "**2"){
@@ -84,14 +83,37 @@ function calculate(firstOperand, secondOperand, operator){
             common_factor = Math.abs(greatest_common_factor(squared*multiplier, 1*multiplier))
             numerator = (squared*multiplier)/common_factor
             denominator = (1*multiplier)/common_factor
-            console.log(numerator)
             fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
             calculator.display = fraction.textContent 
         } else{
-            calculator.display = firstOperand ** 2
+            calculator.display = `${firstOperand ** 2}`
         }
         return firstOperand ** 2
-    }
+       
+    } else if (operator === "**n"){
+        const product = parseFloat((firstOperand ** secondOperand).toFixed(4))
+        if (!Number.isInteger(product)){
+            common_factor = Math.abs(greatest_common_factor(product*multiplier, 1*multiplier))
+            numerator = (product*multiplier)/common_factor
+            denominator = (1*multiplier)/common_factor
+            fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
+            calculator.display = fraction.textContent 
+        } else{
+            calculator.display = `${firstOperand ** secondOperand}`
+        }
+        return firstOperand ** secondOperand
+     } else if (operator === "**3"){
+        const squared = parseFloat((firstOperand ** 3).toFixed(4))
+        if (!Number.isInteger(squared)){
+            common_factor = Math.abs(greatest_common_factor(squared*multiplier, 1*multiplier))
+            numerator = (squared*multiplier)/common_factor
+            denominator = (1*multiplier)/common_factor
+            fraction.innerHTML = `<sup>${numerator}</sup>&frasl;<sub>${denominator}</sub>`
+            calculator.display = fraction.textContent 
+        } else{
+            calculator.display = `${firstOperand ** 3}`
+        }
+        return firstOperand ** 3}
     return secondOperand
 }
 
@@ -100,6 +122,10 @@ function handleOperator(secondOperator){
     const {firstOperand, display, operator} = calculator
     const inputValue = parseFloat(display)
     if (operator === "**2") {
+        const result = calculate(firstOperand, inputValue, operator)
+        calculator.firstOperand = result
+    }
+    if (operator === "**3") {
         const result = calculate(firstOperand, inputValue, operator)
         calculator.firstOperand = result
     }
@@ -129,6 +155,7 @@ function inputDecimal(dot){
 
 function conversion(){
     const {display} = calculator
+    
     if (display.includes(".")){
         const multiplier = 10**(display.split(".")[1].length)
         const numerator = (parseFloat(display)*multiplier)
@@ -137,7 +164,7 @@ function conversion(){
         fraction.innerHTML = `<sup>${numerator/common_factor}</sup>&frasl;<sub>${denominator/common_factor}</sub>`
         calculator.display = fraction.textContent 
     }
-    else {
+    else if (display.includes("⁄")){
         const numerator = parseFloat(display.split("⁄")[0])
         const denominator = parseFloat(display.split("⁄")[1])
         calculator.display = (numerator/denominator).toString()
@@ -170,6 +197,8 @@ myButtons.addEventListener("click", (event) => {
         case '/': 
         case '=': 
         case '**2':
+        case '**3':
+        case '**n':
          handleOperator(value)
          break
         case '.':
